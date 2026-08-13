@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toroidal Harmonic Regenerative Loop — defensive publication, 8 January 2026</title>
+<meta name="description" content="Control laws, resonator options and a buildable reference design. Published 8 January 2026 as prior art. Public domain — defensive publication.">
+<style>
+ :root{--bg:#fbfaf7;--panel:#fff;--line:#e0dcd3;--ink:#23211d;--dim:#5f5a52;--faint:#8d867b;
+   --seal:#7a5c2e;--accent:#2f5d50;
+   --serif:Iowan Old Style,Palatino Linotype,Palatino,Georgia,serif;
+   --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+ @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14130f;--panel:#1b1a16;--line:#332f28;
+   --ink:#e8e3d8;--dim:#a49c8e;--faint:#7d7466;--seal:#c9a25f;--accent:#7bbfa7}}
+ :root[data-theme="dark"]{--bg:#14130f;--panel:#1b1a16;--line:#332f28;--ink:#e8e3d8;--dim:#a49c8e;
+   --faint:#7d7466;--seal:#c9a25f;--accent:#7bbfa7}
+ *{box-sizing:border-box}html,body{margin:0}
+ body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.66}
+ .wrap{max-width:44rem;margin:0 auto;padding:0 1.25rem 5rem}
+ a{color:var(--accent)}
+ header{padding:3rem 0 1.5rem;border-bottom:2px solid var(--line)}
+ .kicker{font-family:var(--sans);font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;
+   color:var(--seal);font-weight:700;margin:0 0 .85rem}
+ h1{font-size:clamp(1.9rem,5.5vw,2.7rem);line-height:1.13;margin:0 0 .6rem;letter-spacing:-.015em;text-wrap:balance}
+ .sub{color:var(--dim);font-size:1.08rem;margin:0;text-wrap:balance}
+ .seal{margin:1.6rem 0 0;border:1px solid var(--line);border-left:3px solid var(--seal);
+   background:var(--panel);border-radius:0 7px 7px 0;padding:.85rem 1.1rem;font-family:var(--sans);font-size:.83rem;color:var(--dim)}
+ .seal b{color:var(--ink)}
+ .seal dl{display:grid;grid-template-columns:auto 1fr;gap:.3rem .9rem;margin:0}
+ .seal dt{color:var(--faint);text-transform:uppercase;letter-spacing:.1em;font-size:.66rem;padding-top:.18rem}
+ .seal dd{margin:0}
+ article{padding-top:.6rem}
+ article h1,article h2{font-size:1.42rem;margin:2.4rem 0 .7rem;line-height:1.25;letter-spacing:-.01em;
+   padding-bottom:.3rem;border-bottom:1px solid var(--line);text-wrap:balance}
+ article h3{font-size:1.13rem;margin:1.9rem 0 .5rem}
+ article h4,article h5,article h6{font-size:.98rem;margin:1.5rem 0 .4rem;font-family:var(--sans)}
+ article p{margin:.85rem 0}
+ article ul,article ol{margin:.85rem 0;padding-left:1.5rem}article li{margin:.3rem 0}
+ blockquote{margin:1.1rem 0;padding:.15rem 0 .15rem 1.1rem;border-left:3px solid var(--line);color:var(--dim);font-style:italic}
+ hr{border:0;border-top:1px solid var(--line);margin:2rem 0}
+ code{font-family:var(--mono);font-size:.86em;background:var(--panel);border:1px solid var(--line);
+   border-radius:4px;padding:.08em .34em}
+ .code{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:.9rem 1rem;
+   overflow-x:auto;font-size:.76rem;line-height:1.45}
+ .code code{background:none;border:0;padding:0;font-size:inherit;white-space:pre}
+ .note{font-family:var(--sans);font-size:.81rem;color:var(--faint);border:1px dashed var(--line);
+   border-radius:7px;padding:.7rem .95rem;margin:2rem 0 0}
+ footer{margin-top:3rem;padding-top:1.6rem;border-top:2px solid var(--line);font-family:var(--sans);font-size:.83rem;color:var(--dim)}
+ footer h2{font-size:.7rem;letter-spacing:.19em;text-transform:uppercase;color:var(--faint);margin:0 0 .8rem;border:0;padding:0}
+ .sibs{list-style:none;margin:0 0 1.6rem;padding:0;display:grid;gap:.45rem}
+ .sibs a{text-decoration:none;display:block;border:1px solid var(--line);background:var(--panel);
+   border-radius:7px;padding:.6rem .85rem}
+ .sibs a:hover{border-color:var(--seal)}
+ .sibs .t{color:var(--ink);font-weight:600}.sibs .m{color:var(--faint);font-size:.76rem;font-variant-numeric:tabular-nums}
+</style></head><body><div class="wrap">
+<header>
+ <p class="kicker">Defensive publication · prior art</p>
+ <h1>Toroidal Harmonic Regenerative Loop</h1>
+ <p class="sub">Control laws, resonator options and a buildable reference design</p>
+ <div class="seal"><dl>
+  <dt>Disclosed</dt><dd><b>8 January 2026</b> — first commit 2026-01-08 08:41:41 UTC</dd>
+  <dt>Rights</dt><dd>Public domain — defensive publication</dd>
+  <dt>Record</dt><dd><a href="https://github.com/sjgant80-hub/thrl-harmonic-energy-loop">github.com/sjgant80-hub/thrl-harmonic-energy-loop</a> — the commit history is the timestamp</dd>
+ </dl></div>
+</header>
+<article>
+<h1>Closed-Loop Harmonic Energy Schematic</h1>
+<p>THRL: A phase-locked resonant energy loop that maintains a high-Q oscillator with quadrature drive, harvests in-phase power as adjustable damping via synchronous extraction, recycles reactive energy locally, and buffers output through a storage bus under a hard safety envelope.</p>
+<p>Closed-Loop Harmonic Energy Schematic</p>
+<p>Name: Toroidal Harmonic Regenerative Loop (THRL)</p>
+<p>Purpose: A closed-loop control schematic that does not claim free energy, but captures, shapes, stores, and reuses oscillatory energy (electrical + mechanical) by keeping a system at safe, high-Q resonance while harvesting only the controlled surplus.</p>
+<p>Status: Conceptual architecture for open experimentation, education, and defensible disclosure.</p>
+<ol start="1">
+<li>Core idea in one sentence</li>
+</ol>
+<p>Build an energy system that behaves like a musical instrument: you maintain resonance with minimal drive, extract energy only in-phase, and recycle reactive energy instead of dumping it as heat.</p>
+<ol start="2">
+<li>Closed-loop harmonic schematic (block + signal flow)</li>
+</ol>
+<p>                 ┌─────────────────────────────────────────────────┐</p>
+<p>                 │                 SAFETY ENVELOPE                 │</p>
+<p>                 │  (limits, interlocks, temp, voltage, speed, EMI)│</p>
+<p>                 └───────────────┬─────────────────────────────────┘</p>
+<p>                                 │ enables/derates</p>
+<p>                                 v</p>
+<p>┌───────────┐   sense    ┌──────────────────┐   control   ┌──────────────────┐</p>
+<p>│ Resonator │───────────▶│ Phase/Freq Lock  │────────────▶│ Drive Inverter   │</p>
+<p>│ (electro- │  V,I,φ,a   │ (PLL + estimator)│  f<em>, φ</em>, A* │ (bidirectional)  │</p>
+<p>│ mech)     │◀───────────│ (Q, modal state) │◀────────────│ (current-mode)   │</p>
+<p>└─────┬─────┘  inject     └────────┬─────────┘  feedback   └───────┬──────────┘</p>
+<p>      │                            │                                │</p>
+<p>      │ harvest (in-phase)         │ setpoints                      │ injects</p>
+<p>      v                            v                                v</p>
+<p>┌──────────────────┐       ┌──────────────────┐             ┌──────────────────┐</p>
+<p>│ Synchronous       │──────▶│ Storage Bus      │◀───────────▶│ Reactive Energy  │</p>
+<p>│ Energy Extractor  │  Pdc  │ (supercap/batt) │  Qrecirc    │ Recycler (L-C)   │</p>
+<p>│ (active rectifier │       │ + DC link)      │             │ (soft-switching) │</p>
+<p>│ + load shaping)   │       └───────┬─────────┘             └──────────────────┘</p>
+<p>└─────────┬────────┘               │</p>
+<p>          │                         │ deliver</p>
+<p>          v                         v</p>
+<p>     ┌───────────┐           ┌───────────────┐</p>
+<p>     │ Useful    │           │ External Load  │</p>
+<p>     │ Output    │           │ / Grid / Micro │</p>
+<p>     └───────────┘           └───────────────┘</p>
+<p>What makes it “harmonic” and “closed-loop”</p>
+<p>Harmonic: everything revolves around phase, frequency, Q, and modal energy—not just volts and watts.</p>
+<p>Closed-loop: sensing → phase-lock → drive + extraction shaping → storage → drive again, with stability and safety limits.</p>
+<ol start="3">
+<li>The physical “resonator” options (choose one)</li>
+</ol>
+<p>A) Electrical toroid resonator (cleanest to prototype)</p>
+<p>Toroidal inductor + capacitor bank (L–C), optionally a coupled secondary.</p>
+<p>Goal: high-Q oscillation at kHz–MHz range.</p>
+<p>B) Electromechanical resonator (more intuitive)</p>
+<p>Flywheel/rotor on magnetic bearing + motor/generator, operated as a mechanical oscillator (torsional resonance).</p>
+<p>Goal: store energy as rotational momentum; harvest via controlled generator torque.</p>
+<p>C) Acoustic / piezo lattice (low power, sensor-rich)</p>
+<p>Piezo stack + acoustic cavity; resonance maintained, energy drawn into DC bus.</p>
+<p>The architecture is the same: you treat the resonator like an “instrument” whose pitch (f) and phase (φ) must be held.</p>
+<ol start="4">
+<li>Key control laws (minimal math, maximum usefulness)</li>
+</ol>
+<p>4.1 Phase-locked drive (keep it singing)</p>
+<p>Maintain the drive so current (or force) is in quadrature with the resonator state to sustain oscillation efficiently, while the extractor takes the in-phase component.</p>
+<p>Estimate resonator phase:</p>
+<p>φ = angle(analytic_signal(V) or analytic_signal(position))</p>
+<p>Set drive phase relative to resonator:</p>
+<p>φ_drive = φ + 90° (sustain)</p>
+<p>Amplitude control to hold target energy:</p>
+<p>Ê = ½ C V² (electrical) or ½ J ω² (mechanical)</p>
+<p>A<em> = clamp(A</em> + k(E_target − Ê), limits)</p>
+<p>4.2 Synchronous extraction (take only what doesn’t collapse resonance)</p>
+<p>Extraction is shaped to appear as damping that you can dial up/down:</p>
+<p>Extractor current reference:</p>
+<p>i_extract = k_damp · V_res (in-phase with V)</p>
+<p>k_damp is adjusted so Q stays in a safe band:</p>
+<p>k_damp = f(Q_target − Q̂)</p>
+<p>4.3 Reactive energy recycling (stop wasting VARs)</p>
+<p>Use bidirectional power stages and soft switching so reactive power circulates locally rather than heating devices.</p>
+<ol start="5">
+<li>Concrete “buildable” reference design (electrical prototype)</li>
+</ol>
+<p>Components</p>
+<p>L (toroidal inductor): low-loss core or air-core, sized for target f.</p>
+<p>C (resonant capacitor bank): film caps, low ESR.</p>
+<p>Bidirectional inverter: MOSFET/SiC half-bridge, current-mode control.</p>
+<p>Active rectifier/extractor: synchronous full-bridge to DC bus.</p>
+<p>Storage bus: supercap (fast) + battery (energy).</p>
+<p>Sensors: V_res, I_res, DC link V, device temp, EMI pickup.</p>
+<p>Operating cycle</p>
+<p>Start-up chirp: sweep frequency to find peak response (resonance).</p>
+<p>Lock: PLL locks onto resonant frequency; drive aligns phase.</p>
+<p>Harvest: extractor increases damping slowly until bus target is met.</p>
+<p>Regulate: bus controller allocates energy to load/storage.</p>
+<p>Protect: if temperature, voltage, or instability rises → derate or open loop.</p>
+<ol start="6">
+<li>Why this is “closed-loop regenerative” (without magical claims)</li>
+</ol>
+<p>In ordinary systems, reactive energy (sloshing between L and C) often causes losses because the electronics fight it.</p>
+<p>Here, reactive energy is treated as a resource:</p>
+<p>The drive maintains oscillation with minimal injection,</p>
+<p>The extractor harvests as controlled damping,</p>
+<p>The recycler reduces switching losses,</p>
+<p>The bus stores and redeploys energy.</p>
+<p>This is resonant energy management, not creation.</p>
+<ol start="7">
+<li>Stability &amp; safety envelope (non-optional)</li>
+</ol>
+<p>Failure modes in resonant systems are real: runaway voltage/current, thermal drift, parasitic oscillations, EMI.</p>
+<p>Minimum safeguards:</p>
+<p>Hard clamps: V_res max, I_res max, DC link max.</p>
+<p>Thermal derating: MOSFET/inductor/cap temperature.</p>
+<p>Mode detection: if multiple resonant modes appear, reduce gain or re-scan.</p>
+<p>EMI containment: shielding + filtered measurement chain.</p>
+<p>Safe shutdown: open drive, short or dump resonator through controlled path if needed.</p>
+<ol start="8">
+<li>“Harmonic schematic” in a single sentence (to publish)</li>
+</ol>
+<p>THRL: A phase-locked resonant energy loop that maintains a high-Q oscillator with quadrature drive, harvests in-phase power as adjustable damping via synchronous extraction, recycles reactive energy locally, and buffers output through a storage bus under a hard safety envelope.</p>
+<ol start="9">
+<li>Optional upgrade: braided multi-resonator array (the “chorus”)</li>
+</ol>
+<p>Instead of one resonator, use N coupled resonators (slightly detuned). Benefits:</p>
+<p>wider operating bandwidth</p>
+<p>reduced peak stress per cell</p>
+<p>distributed thermal load</p>
+<p>controllable modal patterns (“harmonic beamforming” for energy flow inside the array)</p>
+<p>Control extension:</p>
+<p>modal estimator → drive allocation vector u across cells</p>
+<p>extractor damping applied per mode, not per cell</p>
+</article>
+
+<footer>
+ <h2>The rest of the set</h2>
+ <ul class="sibs">
+  <li><a href="https://sjgant80-hub.github.io/thrl-regenerative-schematic/"><span class="t">Closed-Loop Harmonic Energy Schematic</span>
+   <span class="m">Energy · 9 January 2026</span></a></li>
+  <li><a href="https://sjgant80-hub.github.io/clhes-harmonic-energy-system/"><span class="t">Closed-Loop Harmonic Energy System</span>
+   <span class="m">Energy · 21 January 2026</span></a></li>
+  <li><a href="https://sjgant80-hub.github.io/kinetic-braid-prior-art/"><span class="t">The Kinetic Braid</span>
+   <span class="m">Physics-aware AI · 7 January 2026</span></a></li>
+  <li><a href="https://sjgant80-hub.github.io/open-source-diagnostic-braid/"><span class="t">Open-Source Diagnostic Braid</span>
+   <span class="m">Diagnostics · 7 January 2026</span></a></li>
+  <li><a href="https://sjgant80-hub.github.io/mycelial-cognition-architecture/"><span class="t">Mycelial Cognition Architecture</span>
+   <span class="m">Cognition · 8 January 2026</span></a></li>
+  <li><a href="https://sjgant80-hub.github.io/stigmergic-governance-mesh/"><span class="t">Planetary Stigmergic Governance Mesh</span>
+   <span class="m">Cognition · 8 January 2026</span></a></li>
+  <li><a href="https://sjgant80-hub.github.io/diagnostic-braid/"><span class="t">Diagnostic Braid</span>
+   <span class="m">Diagnostics · 8 January 2026</span></a></li>
+  <li><a href="https://sjgant80-hub.github.io/mycelial-cognition-braided/"><span class="t">Mycelial Cognition, Braided</span>
+   <span class="m">Cognition · 9 January 2026</span></a></li>
+  <li><a href="https://sjgant80-hub.github.io/policy-phi-fighter/"><span class="t">Policy-Phi Fighter</span>
+   <span class="m">Consumer tool · 9 January 2026</span></a></li>
+ </ul>
+ <p>Published as prior art so these ideas stay buildable by anyone. This page is generated from the
+ repository's own README — it re-presents the filing, it does not restate it.</p>
+</footer>
+</div></body></html>
